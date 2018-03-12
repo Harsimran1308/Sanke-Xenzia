@@ -1,0 +1,465 @@
+#include<iostream>
+#include<stdlib.h>
+#include<fstream>
+#include<string>
+#include<windows.h>
+#include<conio.h>
+#include<chrono>
+
+   using namespace std;
+
+
+      struct snake
+      {
+          int x;
+          int y;
+          char a;
+
+          struct snake *next;
+
+      };
+
+      struct food
+      {
+          int x;
+          int y;
+          char a;
+
+      };
+
+     struct snake * CreateSnake(struct snake *head)
+      {
+         int a=10;
+         int b=7;
+
+                 head->x=a;
+                 head->y=b;
+                 head->a='A';
+
+                   b--;
+
+               struct snake *temp= new snake();
+               temp=head;
+
+               for(int i=0;i<=1;i++)
+               {
+                   struct snake *extra= new snake();
+                  extra->x=a;
+                  extra->y=b--;
+                  extra->a='#';
+
+
+                  temp->next=extra;
+
+                  temp=temp->next;
+
+               }
+
+                struct snake *temp1=head;
+
+
+             return head;
+
+
+      }
+         struct food * CreateFood(struct food *f)
+      {
+          f->x=rand()%20;
+          f->y=rand()%20;
+          f->a='X';
+
+           return f;
+      }
+
+
+
+      void SnakeMoveToBoard(struct snake *head,char (&m)[20][20])
+      {
+
+          for(int i=0;i<20;i++)
+          {
+              for(int j=0;j<20;j++)
+              {
+                  m[i][j]='-';
+              }
+          }
+
+
+          if(head->x<0)
+          {
+              head->x=19;
+          }
+          if(head->x>19)
+          {
+
+              head->x=0;
+          }
+          if(head->y<0)
+          {
+              head->y=19;
+          }
+          if(head->y>19)
+          {
+
+              head->y=0;
+          }
+
+          struct snake * temp=head;
+          while(temp!=NULL)
+          {
+              int a=temp->x;
+              int b= temp->y;
+              int ch=temp->a;
+
+              m[a][b]=ch;
+
+
+              temp=temp->next;
+
+          }
+
+      }
+
+      void FoodMoveToBoard(struct food *f,char (&m)[20][20])
+      {
+          int a=f->x;
+          int b=f->y;
+          char ch=f->a;
+
+          m[a][b]=ch;
+
+
+
+
+      }
+
+      void Print(char matrix[20][20])
+      {
+          for(int i=0;i<20;i++)
+          {
+
+              for(int j=0;j<20;j++)
+              {
+                  cout<<matrix[i][j];
+              }
+              cout<<"\n";
+          }
+
+      }
+
+      struct snake * SnakeMoveForward(struct snake * head)
+      {
+          int px=head->x;
+          int py=head->y;
+
+          head->y=head->y+1;
+         struct snake *temp=head;
+         temp=temp->next;
+
+
+          while(temp!=NULL)
+          {
+              int p1x=temp->x;
+              int p1y=temp->y;
+
+              temp->x=px;
+              temp->y=py;
+
+              px=p1x;
+              py=p1y;
+
+
+              temp=temp->next;
+
+
+
+          }
+
+          return head;
+
+
+      }
+
+
+      struct snake * SnakeMoveUpward(struct snake * head)
+      {
+          int px=head->x;
+          int py=head->y;
+
+          head->x=head->x-1;
+         struct snake *temp=head;
+         temp=temp->next;
+
+         cout<<px;
+                cout<<" "<<py;
+                cout<<"\n";
+
+
+          while(temp!=NULL)
+          {
+              int p1x=temp->x;
+              int p1y=temp->y;
+
+              temp->x=px;
+              temp->y=py;
+
+              px=p1x;
+              py=p1y;
+
+
+              temp=temp->next;
+
+
+
+          }
+
+          return head;
+
+      }
+
+      struct snake * SnakeMoveBackward(struct snake *head)
+      {
+            int px=head->x;
+          int py=head->y;
+
+          head->y=head->y-1;
+         struct snake *temp=head;
+         temp=temp->next;
+
+         cout<<px;
+                cout<<" "<<py;
+                cout<<"\n";
+
+
+          while(temp!=NULL)
+          {
+              int p1x=temp->x;
+              int p1y=temp->y;
+
+              temp->x=px;
+              temp->y=py;
+
+              px=p1x;
+              py=p1y;
+
+
+              temp=temp->next;
+
+
+
+          }
+
+          return head;
+
+      }
+
+      struct snake * SnakeMoveDownward(struct snake *head)
+      {
+         int px=head->x;
+          int py=head->y;
+
+          head->x=head->x+1;
+         struct snake *temp=head;
+         temp=temp->next;
+
+         cout<<px;
+                cout<<" "<<py;
+                cout<<"\n";
+
+
+          while(temp!=NULL)
+          {
+              int p1x=temp->x;
+              int p1y=temp->y;
+
+              temp->x=px;
+              temp->y=py;
+
+              px=p1x;
+              py=p1y;
+
+
+              temp=temp->next;
+
+
+
+          }
+
+          return head;
+      }
+
+      int CheckEat(struct food *f,struct snake *head)
+      {
+          if(f->x==head->x && f->y==head->y)
+          {
+              return 1;
+
+
+          }
+          else{
+            return 0;
+          }
+
+      }
+
+      struct snake *IncreaseSize(struct snake *head,struct food *f)
+      {
+
+       struct snake *extra=new snake();
+
+       extra->x=f->x;
+       extra->y=f->y;
+       extra->a='A';
+       head->a='#';
+       extra->next=head;
+
+       head=extra;
+
+        f->a='-';
+        f->x=NULL;
+        f->y=NULL;
+
+       return head;
+
+
+      }
+
+      int CheckGameOver(struct snake *head)
+      {
+
+          struct snake *temp=head;
+          temp=temp->next;
+
+          int flag=0;
+          while(temp!=NULL)
+          {
+              if(temp->x==head->x && temp->y==head->y)
+              {
+                  flag=1;
+                  break;
+              }
+
+              else{
+                temp=temp->next;
+              }
+          }
+
+             return flag;
+
+      }
+
+
+
+      int main()
+      {
+
+        struct snake *head= new snake();
+        struct food *f = new food();
+
+        char m[20][20];
+
+
+
+
+           head=CreateSnake(head);
+
+
+           f=CreateFood(f);
+
+
+
+
+
+             SnakeMoveToBoard(head,m);
+              FoodMoveToBoard(f,m);
+
+               Print(m);
+
+               char a;
+                a='d';
+               while(1)
+               {
+                   if(kbhit())
+                   {
+                       a=_getch();
+
+                   }
+
+                   if(a=='d')
+                   {
+                       head=SnakeMoveForward(head);
+
+
+
+                   }
+
+                   if(a=='w')
+                   {
+                       head=SnakeMoveUpward(head);
+                   }
+
+                   if(a=='a')
+                   {
+                       head=SnakeMoveBackward(head);
+                   }
+
+                   if(a=='s')
+                   {
+                       head=SnakeMoveDownward(head);
+
+                   }
+
+
+                   int value=CheckEat(f,head);
+                   int e=CheckGameOver(head);
+
+                   if(e==1)
+                   {
+
+                       cout<<"GAME OVER";
+
+                       break;
+                   }
+
+                   if(value==1)
+                   {
+
+                       head=IncreaseSize(head,f);
+                       f=CreateFood(f);
+                   }
+
+                  SnakeMoveToBoard(head,m);
+              FoodMoveToBoard(f,m);
+
+
+
+               Print(m);
+
+                  Sleep(200);
+                  system("CLS");
+
+               }
+
+
+
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
